@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Josh Agble, Identity and Access Management</title>
+<meta name="description" content="Josh Agble, IAM engineer. Hybrid identity, Zero Trust, federation and PKI across Entra ID, Active Directory and Okta.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2320465A'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='28' fill='%23F3F5F4' text-anchor='middle'%3EJA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3F5F4;
+    --ink: #18222B;
+    --steel: #56656F;
+    --rule: #D5DCDA;
+    --card: #20465A;
+    --card-deep: #183747;
+    --chip: #D4A84A;
+    --allow: #2F7A57;
+    --focus: #D4A84A;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  a { color: var(--card); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--ink); }
+  a:focus-visible, .btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 64px; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 56px; align-items: center; }
+  .name { font-size: 15px; font-weight: 700; color: var(--steel); margin: 0 0 18px; letter-spacing: 0.01em; }
+  h1 {
+    font-size: clamp(34px, 4.6vw, 54px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 22px;
+    max-width: 14ch;
+  }
+  .lede { font-size: 19px; color: var(--steel); max-width: 52ch; margin: 0 0 30px; }
+  .lede strong { color: var(--ink); font-weight: 500; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block; padding: 11px 20px; border-radius: 6px; font-weight: 700; font-size: 16px;
+    text-decoration: none; border: 2px solid var(--card);
+  }
+  .btn-primary { background: var(--card); color: var(--paper); }
+  .btn-primary:hover { background: var(--card-deep); color: var(--paper); }
+  .btn-quiet { color: var(--card); background: transparent; }
+  .btn-quiet:hover { background: #E3EAE8; color: var(--card); }
+
+  /* ---------- the credential ---------- */
+  .credential {
+    position: relative;
+    aspect-ratio: 1.586;
+    width: 100%;
+    max-width: 440px;
+    justify-self: end;
+    border-radius: 18px;
+    color: #EAF0EE;
+    background-color: var(--card);
+    background-image:
+      repeating-radial-gradient(circle at 115% -10%, rgba(255,255,255,0.045) 0 1px, transparent 1px 9px),
+      repeating-radial-gradient(circle at -20% 120%, rgba(255,255,255,0.035) 0 1px, transparent 1px 11px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 24px 48px -20px rgba(24,55,71,0.55), 0 2px 6px rgba(24,55,71,0.25);
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    grid-template-rows: auto 1fr auto;
+    column-gap: 20px;
+    transform: rotate(-2.5deg);
+    animation: issue 900ms cubic-bezier(.2,.8,.2,1) both 150ms;
+  }
+  @keyframes issue {
+    from { opacity: 0; transform: translateY(28px) rotate(4deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(-2.5deg); }
+  }
+  .cred-top { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+  .cred-org { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; opacity: 0.85; }
+  .chip {
+    width: 46px; height: 36px; border-radius: 7px;
+    background:
+      linear-gradient(90deg, transparent 31%, rgba(0,0,0,0.22) 31% 34%, transparent 34% 66%, rgba(0,0,0,0.22) 66% 69%, transparent 69%),
+      linear-gradient(0deg, transparent 45%, rgba(0,0,0,0.22) 45% 55%, transparent 55%),
+      var(--chip);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.18);
+  }
+  .portrait {
+    grid-row: 2; width: 84px; height: 100px; border-radius: 10px;
+    background: #2C5A70; display: grid; place-items: center;
+    font-size: 32px; font-weight: 800; color: #F3F5F4; letter-spacing: -0.02em;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+  }
+  .fields { grid-row: 2; display: grid; gap: 7px; align-content: start; }
+  .field span { display: block; font-size: 11px; opacity: 0.7; line-height: 1.2; }
+  .field b { display: block; font-size: 15px; font-weight: 700; line-height: 1.25; }
+  .field b.big { font-size: 19px; }
+  .cred-foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; margin-top: 12px; font-size: 12px; }
+  .cred-foot .ok { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+  .cred-foot .ok::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #6FD19C; box-shadow: 0 0 0 3px rgba(111,209,156,0.2); }
+
+  /* ---------- sections ---------- */
+  section { padding: 56px 0; border-top: 1px solid var(--rule); }
+  h2 { font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.015em; margin: 0 0 8px; }
+  .section-intro { color: var(--steel); max-width: 62ch; margin: 0 0 32px; }
+
+  /* problems: a log of real decisions */
+  .cases { list-style: none; margin: 0; padding: 0; }
+  .case {
+    display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) auto;
+    gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--rule); align-items: baseline;
+  }
+  .case h3 { font-size: 18px; line-height: 1.35; margin: 0; font-weight: 700; }
+  .case p { margin: 0; color: var(--steel); }
+  .case p strong { color: var(--ink); font-weight: 500; }
+  .case a { font-weight: 700; white-space: nowrap; font-size: 15px; }
+
+  /* projects */
+  .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+  .project { padding: 22px 0; border-bottom: 1px solid var(--rule); }
+  .project h3 { font-size: 20px; margin: 0 0 6px; font-weight: 700; line-height: 1.3; }
+  .project h3 a { color: var(--ink); text-decoration: none; }
+  .project h3 a:hover { text-decoration: underline; }
+  .project p { margin: 0; color: var(--steel); }
+  .tag { display: inline-block; font-size: 13px; font-weight: 700; color: var(--card); background: #E1EAE8; border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
+  .more { margin: 24px 0 0; }
+
+  /* certs + skills */
+  .two { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 56px; }
+  .certs { list-style: none; padding: 0; margin: 0; }
+  .certs li { padding: 10px 0; border-bottom: 1px solid var(--rule); font-weight: 500; }
+  .certs li.pending { color: var(--steel); font-weight: 400; font-style: italic; }
+  .skills { display: grid; gap: 18px; }
+  .skills h3 { font-size: 15px; margin: 0 0 4px; font-weight: 700; }
+  .skills p { margin: 0; color: var(--steel); }
+
+  /* contact */
+  .contact { padding: 64px 0 72px; }
+  .contact h2 { font-size: clamp(28px, 3.4vw, 40px); max-width: 20ch; }
+  footer { border-top: 1px solid var(--rule); padding: 24px 0 40px; color: var(--steel); font-size: 14px; }
+  footer p { margin: 4px 0; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 880px) {
+    .hero { padding: 40px 0 48px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .credential { justify-self: start; max-width: 400px; transform: rotate(-1.5deg); }
+    @keyframes issue { from { opacity: 0; transform: translateY(20px) rotate(3deg); } to { opacity: 1; transform: rotate(-1.5deg); } }
+    .case { grid-template-columns: 1fr; gap: 6px; }
+    .projects, .two { grid-template-columns: 1fr; gap: 0; }
+    .two { gap: 40px; }
+  }
+  @media (max-width: 420px) {
+    body { font-size: 16px; }
+    .credential { padding: 16px 18px; grid-template-columns: 64px 1fr; column-gap: 14px; border-radius: 14px; }
+    .portrait { width: 64px; height: 78px; font-size: 24px; }
+    .field b { font-size: 13px; } .field b.big { font-size: 16px; }
+    .field span { font-size: 10px; }
+    .fields { gap: 4px; }
+    .cred-top { margin-bottom: 8px; }
+    .chip { width: 36px; height: 28px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .credential { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="name">Josh Agble</p>
+      <h1>I build identity systems, break them on purpose, and fix what I find.</h1>
+      <p class="lede">IAM engineer working across <strong>Entra ID, Active Directory and Okta</strong>: lifecycle automation, Zero Trust access, federation and PKI. Every project runs on one fictional defense contractor, and every claim links to the evidence.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="mailto:joshuaagble@gmail.com">Email me</a>
+        <a class="btn btn-quiet" href="https://linkedin.com/in/joshagble/">LinkedIn</a>
+        <a class="btn btn-quiet" href="https://github.com/jagble">GitHub</a>
+      </div>
+    </div>
+
+    <div class="credential" role="img" aria-label="A stylized identity badge for Josh Agble: Identity and Access Management, access level least privilege, sign-in method certificate.">
+      <div class="cred-top">
+        <span class="cred-org">Identity credential</span>
+        <span class="chip" aria-hidden="true"></span>
+      </div>
+      <div class="portrait" aria-hidden="true">JA</div>
+      <div class="fields" aria-hidden="true">
+        <div class="field"><span>Name</span><b class="big">Joshua Agble</b></div>
+        <div class="field"><span>Role</span><b>Identity &amp; Access Management</b></div>
+        <div class="field"><span>Access level</span><b>Least privilege</b></div>
+      </div>
+      <div class="cred-foot" aria-hidden="true">
+        <span>Sign-in method: certificate</span>
+        <span class="ok">Valid</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section id="problems">
+    <div class="wrap">
+      <h2>Problems I've worked through</h2>
+      <p class="section-intro">The situations identity teams actually face, what I did about each one, and where to see the work.</p>
+      <ul class="cases">
+        <li class="case">
+          <h3>A fired employee can still get in</h3>
+          <p>Measured how long a terminated user kept cloud access: their old password still worked at 79 seconds. Made offboarding revoke sessions and force a sync, <strong>cutting the cloud disable lag from about 29 minutes to about 3</strong>.</p>
+          <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.5-lifecycle-automation/README.md#5-leaver-and-the-exposure-window">See the test</a>
+        </li>
+        <li class="case">
+          <h3>300 new hires start on the same day</h3>
+          <p>Created 306 accounts in one run from an HR file, each with the right role groups, <strong>checked against an answer key written beforehand</strong>.</p>
+          <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.5-lifecycle-automation/README.md#9-scale-test-340-people">See the test</a>
+        </li>
+        <li class="case">
+          <h3>A Domain Admin hidden in a nested group</h3>
+          <p>Built a review that follows group nesting. It found the path I planted, <strong>plus two problems I didn't plant</strong>.</p>
+          <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.6-security-review/README.md">See the review</a>
+        </li>
+        <li class="case">
+          <h3>Admins hold Global Admin around the clock</h3>
+          <p>Removed standing admin access, including my own. Global Admin now needs MFA, a reason and a second person's approval, and <strong>expires after one hour</strong>.</p>
+          <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.3-privileged-identity-management/README.md">See the setup</a>
+        </li>
+        <li class="case">
+          <h3>An employee's account is compromised</h3>
+          <p>Rebuilt the timeline from the logs, confirmed one account was affected, and <strong>contained it in 11 minutes</strong>. Found that passing MFA marked the risk as resolved, and added an alert for it.</p>
+          <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.6-incident-response/README.md">See the response</a>
+        </li>
+        <li class="case">
+          <h3>A forgotten app can read the whole directory</h3>
+          <p>Inventoried every app and its credentials, found an owner-less app with Tier 0 rights, deleted the risky one, and <strong>moved reporting to a managed identity with no stored secret</strong>.</p>
+          <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.8-non-human-identities/README.md">See the inventory</a>
+        </li>
+        <li class="case">
+          <h3>Moving an app to a new identity provider could lock everyone out</h3>
+          <p>Found that AD usernames use a non-routable suffix, so every cloud username differs. Connected ServiceNow by employee ID instead, so <strong>nobody's identity changed in the migration</strong>.</p>
+          <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.4-saml-adfs/README.md#1-choosing-the-identifier">See the design</a>
+        </li>
+        <li class="case">
+          <h3>A retired federation server could still forge sign-ins</h3>
+          <p>Migrated ServiceNow off AD FS to Entra ID, then decommissioned AD FS end to end, including <strong>its signing-key container in AD and its revoked certificate</strong>.</p>
+          <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.5-migrate-to-entra/README.md#7-decommissioning-ad-fs">See the decommission</a>
+        </li>
+        <li class="case">
+          <h3>An app can't keep a secret, and sign-in codes get stolen</h3>
+          <p>Built an OIDC app with no client secret, using PKCE. Proved a stolen code is useless without the verifier, works only once, and <strong>is never issued to an unassigned user</strong>.</p>
+          <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.6-oidc-oauth/README.md#7-attacks-that-should-fail">See the tests</a>
+        </li>
+        <li class="case">
+          <h3>A stolen smart card should stop working right away</h3>
+          <p>Built certificate-only sign-in with certificates from my own CA, the lab version of CAC/PIV. Then revoked a certificate and showed <strong>Entra still accepted it 40 minutes later</strong>, and documented what has to go with revocation.</p>
+          <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.8-cba-and-review/README.md#6-revocation">See the test</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <h2>Projects</h2>
+      <p class="section-intro">Connected projects on one fictional company, Potomac Defense Systems. Each picks up the gaps the last one found.</p>
+      <div class="projects">
+        <article class="project">
+          <h3><a href="https://github.com/jagble/hybrid-iam-jml-lab">Hybrid identity and lifecycle automation</a></h3>
+          <p>A PowerShell engine that gives people access on day one, changes it when their job changes, and removes it when they leave, across Active Directory and Entra ID.</p>
+        </article>
+        <article class="project">
+          <h3><a href="https://github.com/jagble/zero-trust-iam-lab">Zero Trust access and governance</a></h3>
+          <p>Conditional Access, just-in-time admin with PIM, access requests with approvals, access reviews, incident response and non-human identities in Entra ID.</p>
+        </article>
+        <article class="project">
+          <h3><a href="https://github.com/jagble/federated-sso-pki-lab">Federated SSO and PKI</a></h3>
+          <p>An AD FS to Entra ID migration, SAML and OIDC apps, an internal certificate authority, and certificate-based sign-in required by Conditional Access.</p>
+        </article>
+        <article class="project">
+          <h3><a href="https://github.com/jagble/okta-workforce-identity-lab">Okta workforce identity</a><span class="tag">Building now</span></h3>
+          <p>An Okta pilot with HR-driven groups, phishing-resistant MFA for admins, Entra ID as an identity provider, and lifecycle automation through the API.</p>
+        </article>
+        <article class="project">
+          <h3><a href="https://github.com/jagble/identity-security-metrics">Identity security metrics</a><span class="tag">Building now</span></h3>
+          <p>A Databricks pipeline that turns HR, MFA and sign-in data into metrics with targets, detects account takeover with rules and machine learning, and reports it in dashboards.</p>
+        </article>
+        <article class="project">
+          <h3><a href="https://github.com/jagble/dns-incident-response-automation">DNS incident response automation</a></h3>
+          <p>My capstone for a B.S. in IT: Python that finds hijacked devices, opens help desk tickets through an API, fixes every device over SSH, and keeps watching.</p>
+        </article>
+      </div>
+      <p class="more">More, including Active Directory and help desk projects, on <a href="https://github.com/jagble">GitHub</a>.</p>
+    </div>
+  </section>
+
+  <section id="credentials">
+    <div class="wrap two">
+      <div>
+        <h2>Certifications</h2>
+        <ul class="certs">
+          <li>CompTIA Security+</li>
+          <li>CompTIA Cloud+</li>
+          <li>CompTIA Network+</li>
+          <li>CompTIA A+</li>
+          <li>AWS Certified Cloud Practitioner</li>
+          <li>LPI Linux Essentials</li>
+          <li>ITIL 4 Foundation</li>
+          <li class="pending">In progress: Microsoft SC-300, Identity and Access Administrator</li>
+        </ul>
+        <p class="section-intro" style="margin-top:20px">B.S. Information Technology, Western Governors University, 2026.</p>
+      </div>
+      <div>
+        <h2>Skills</h2>
+        <div class="skills">
+          <div><h3>Identity and lifecycle</h3><p>Entra ID, Active Directory, Entra Connect, Okta, joiner-mover-leaver automation, RBAC, separation of duties</p></div>
+          <div><h3>Access security</h3><p>Conditional Access, MFA and passkeys, phishing-resistant authentication, Identity Protection, break-glass accounts</p></div>
+          <div><h3>Privileged access and governance</h3><p>PIM, just-in-time access, admin tiering, access packages, access reviews, gMSA</p></div>
+          <div><h3>Federation and PKI</h3><p>SAML 2.0, OpenID Connect, OAuth 2.0 with PKCE, AD FS migration, AD CS, certificate templates, certificate-based authentication</p></div>
+          <div><h3>Automation and monitoring</h3><p>PowerShell, Python, Microsoft Graph, REST APIs, KQL, Log Analytics, Azure Monitor alerts</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>Hiring for identity and access work? Let's talk.</h2>
+      <p class="section-intro">I'm looking for IAM analyst and engineer roles, including federal and defense work.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="mailto:joshuaagble@gmail.com">joshuaagble@gmail.com</a>
+        <a class="btn btn-quiet" href="https://linkedin.com/in/joshagble/">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Potomac Defense Systems is a fictional company, and all people and data in these projects are made up.</p>
+    <p>I use AI as a mentor and pair programmer while building, and every result shown here comes from runs I did myself.</p>
+  </div>
+</footer>
+
+</body>
+</html>
