@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Josh Agble, Identity and Access Management</title>
-<meta name="description" content="Josh Agble, IAM engineer. Hybrid identity, Zero Trust, federation and PKI across Entra ID, Active Directory and Okta.">
+<title>Josh Agble, Cybersecurity and Identity</title>
+<meta name="description" content="Josh Agble, cybersecurity professional focused on identity and access management, incident response, PKI and security automation.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2320465A'/%3E%3Ctext x='32' y='42' font-family='Arial' font-weight='700' font-size='28' fill='%23F3F5F4' text-anchor='middle'%3EJA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,13 +136,23 @@
   .tag { display: inline-block; font-size: 13px; font-weight: 700; color: var(--card); background: #E1EAE8; border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
   .more { margin: 24px 0 0; }
 
-  /* certs + skills */
-  .two { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 56px; }
-  .certs { list-style: none; padding: 0; margin: 0; }
-  .certs li { padding: 10px 0; border-bottom: 1px solid var(--rule); font-weight: 500; }
-  .certs li.pending { color: var(--steel); font-weight: 400; font-style: italic; }
-  .skills { display: grid; gap: 18px; }
-  .skills h3 { font-size: 15px; margin: 0 0 4px; font-weight: 700; }
+  /* certifications: badge wall */
+  .certs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 24px; }
+  .cert { display: grid; justify-items: start; align-content: start; gap: 4px; }
+  .cert-img {
+    position: relative; width: 96px; height: 96px; margin-bottom: 10px;
+    display: grid; place-items: center; border-radius: 12px;
+    background: #E3EAE8; color: var(--card); font-weight: 800; font-size: 14px; text-align: center; line-height: 1.2;
+  }
+  .cert-img::before { content: attr(data-fallback); padding: 6px; }
+  .cert-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--paper); border-radius: 12px; }
+  .cert-name { font-weight: 700; line-height: 1.3; }
+  .cert-issuer { color: var(--steel); font-size: 15px; line-height: 1.35; }
+  .cert-pending .cert-img { background: transparent; border: 2px dashed #B9C6C3; color: var(--steel); font-weight: 700; font-size: 13px; }
+
+  /* skills */
+  .skills-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 40px; }
+  .skills h3 { font-size: 16px; margin: 0 0 6px; font-weight: 700; }
   .skills p { margin: 0; color: var(--steel); }
 
   /* contact */
@@ -158,8 +168,9 @@
     .credential { justify-self: start; max-width: 400px; transform: rotate(-1.5deg); }
     @keyframes issue { from { opacity: 0; transform: translateY(20px) rotate(3deg); } to { opacity: 1; transform: rotate(-1.5deg); } }
     .case { grid-template-columns: 1fr; gap: 6px; }
-    .projects, .two { grid-template-columns: 1fr; gap: 0; }
-    .two { gap: 40px; }
+    .projects { grid-template-columns: 1fr; gap: 0; }
+    .certs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .skills-grid { grid-template-columns: 1fr; gap: 22px; }
   }
   @media (max-width: 420px) {
     body { font-size: 16px; }
@@ -182,8 +193,8 @@
   <div class="wrap hero-grid">
     <div>
       <p class="name">Josh Agble</p>
-      <h1>I build identity systems, break them on purpose, and fix what I find.</h1>
-      <p class="lede">IAM engineer working across <strong>Entra ID, Active Directory and Okta</strong>: lifecycle automation, Zero Trust access, federation and PKI. Every project runs on one fictional defense contractor, and every claim links to the evidence.</p>
+      <h1>I build secure systems, break them on purpose, and fix what I find.</h1>
+      <p class="lede">Cybersecurity professional with a focus on <strong>identity and access management</strong>. I work across Entra ID, Active Directory and Okta, and on incident response, log analysis, PKI and security automation in Python and PowerShell. Every claim on this page links to the evidence.</p>
       <div class="actions">
         <a class="btn btn-primary" href="mailto:joshuaagble@gmail.com">Email me</a>
         <a class="btn btn-quiet" href="https://linkedin.com/in/joshagble/">LinkedIn</a>
@@ -191,7 +202,7 @@
       </div>
     </div>
 
-    <div class="credential" role="img" aria-label="A stylized identity badge for Josh Agble: Identity and Access Management, access level least privilege, sign-in method certificate.">
+    <div class="credential" role="img" aria-label="A stylized identity badge for Josh Agble: cybersecurity with an identity and access focus, access level least privilege, sign-in method certificate.">
       <div class="cred-top">
         <span class="cred-org">Identity credential</span>
         <span class="chip" aria-hidden="true"></span>
@@ -199,7 +210,7 @@
       <div class="portrait" aria-hidden="true">JA</div>
       <div class="fields" aria-hidden="true">
         <div class="field"><span>Name</span><b class="big">Joshua Agble</b></div>
-        <div class="field"><span>Role</span><b>Identity &amp; Access Management</b></div>
+        <div class="field"><span>Role</span><b>Cybersecurity, IAM focus</b></div>
         <div class="field"><span>Access level</span><b>Least privilege</b></div>
       </div>
       <div class="cred-foot" aria-hidden="true">
@@ -214,7 +225,7 @@
   <section id="problems">
     <div class="wrap">
       <h2>Problems I've worked through</h2>
-      <p class="section-intro">The situations identity teams actually face, what I did about each one, and where to see the work.</p>
+      <p class="section-intro">Security problems organizations actually face, what I did about each one, and where to see the work.</p>
       <ul class="cases">
         <li class="case">
           <h3>A fired employee can still get in</h3>
@@ -240,6 +251,11 @@
           <h3>An employee's account is compromised</h3>
           <p>Rebuilt the timeline from the logs, confirmed one account was affected, and <strong>contained it in 11 minutes</strong>. Found that passing MFA marked the risk as resolved, and added an alert for it.</p>
           <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.6-incident-response/README.md">See the response</a>
+        </li>
+        <li class="case">
+          <h3>Devices are quietly hijacked by a rogue DNS server</h3>
+          <p>Wrote Python that found every device pointed at the rogue server, opened help desk tickets through an API and fixed each device over SSH. Then a monitor that <strong>checks 16 devices every 30 seconds and repairs tampering on its own</strong>.</p>
+          <a href="https://github.com/jagble/dns-incident-response-automation">See the project</a>
         </li>
         <li class="case">
           <h3>A forgotten app can read the whole directory</h3>
@@ -273,7 +289,7 @@
   <section id="projects">
     <div class="wrap">
       <h2>Projects</h2>
-      <p class="section-intro">Connected projects on one fictional company, Potomac Defense Systems. Each picks up the gaps the last one found.</p>
+      <p class="section-intro">Most run on one fictional defense contractor, Potomac Defense Systems, and each picks up the gaps the last one found.</p>
       <div class="projects">
         <article class="project">
           <h3><a href="https://github.com/jagble/hybrid-iam-jml-lab">Hybrid identity and lifecycle automation</a></h3>
@@ -304,30 +320,65 @@
     </div>
   </section>
 
-  <section id="credentials">
-    <div class="wrap two">
-      <div>
-        <h2>Certifications</h2>
-        <ul class="certs">
-          <li>CompTIA Security+</li>
-          <li>CompTIA Cloud+</li>
-          <li>CompTIA Network+</li>
-          <li>CompTIA A+</li>
-          <li>AWS Certified Cloud Practitioner</li>
-          <li>LPI Linux Essentials</li>
-          <li>ITIL 4 Foundation</li>
-          <li class="pending">In progress: Microsoft SC-300, Identity and Access Administrator</li>
-        </ul>
-        <p class="section-intro" style="margin-top:20px">B.S. Information Technology, Western Governors University, 2026.</p>
-      </div>
-      <div>
+  <section id="certifications">
+    <div class="wrap">
+      <h2>Certifications</h2>
+      <p class="section-intro">B.S. Information Technology, Western Governors University, 2026.</p>
+      <ul class="certs">
+          <li class="cert">
+            <span class="cert-img" data-fallback="Security+"><img src="badges/comptia-security-plus.png" alt="CompTIA Security+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">CompTIA Security+</span>
+            <span class="cert-issuer">CompTIA</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="Cloud+"><img src="badges/comptia-cloud-plus.png" alt="CompTIA Cloud+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">CompTIA Cloud+</span>
+            <span class="cert-issuer">CompTIA</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="Network+"><img src="badges/comptia-network-plus.png" alt="CompTIA Network+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">CompTIA Network+</span>
+            <span class="cert-issuer">CompTIA</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="A+"><img src="badges/comptia-a-plus.png" alt="CompTIA A+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">CompTIA A+</span>
+            <span class="cert-issuer">CompTIA</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="AWS CCP"><img src="badges/aws-cloud-practitioner.png" alt="AWS Certified Cloud Practitioner badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">AWS Certified Cloud Practitioner</span>
+            <span class="cert-issuer">Amazon Web Services</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="LPI"><img src="badges/lpi-linux-essentials.png" alt="Linux Essentials badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">Linux Essentials</span>
+            <span class="cert-issuer">Linux Professional Institute</span>
+          </li>
+          <li class="cert">
+            <span class="cert-img" data-fallback="ITIL 4"><img src="badges/itil-4-foundation.png" alt="ITIL 4 Foundation badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+            <span class="cert-name">ITIL 4 Foundation</span>
+            <span class="cert-issuer">PeopleCert</span>
+          </li>
+          <li class="cert cert-pending">
+            <span class="cert-img" data-fallback="In progress"></span>
+            <span class="cert-name">Microsoft SC-300</span>
+            <span class="cert-issuer">Identity and Access Administrator, in progress</span>
+          </li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
         <h2>Skills</h2>
-        <div class="skills">
-          <div><h3>Identity and lifecycle</h3><p>Entra ID, Active Directory, Entra Connect, Okta, joiner-mover-leaver automation, RBAC, separation of duties</p></div>
-          <div><h3>Access security</h3><p>Conditional Access, MFA and passkeys, phishing-resistant authentication, Identity Protection, break-glass accounts</p></div>
-          <div><h3>Privileged access and governance</h3><p>PIM, just-in-time access, admin tiering, access packages, access reviews, gMSA</p></div>
-          <div><h3>Federation and PKI</h3><p>SAML 2.0, OpenID Connect, OAuth 2.0 with PKCE, AD FS migration, AD CS, certificate templates, certificate-based authentication</p></div>
-          <div><h3>Automation and monitoring</h3><p>PowerShell, Python, Microsoft Graph, REST APIs, KQL, Log Analytics, Azure Monitor alerts</p></div>
+        <div class="skills skills-grid">
+          <div><h3>Identity and access management</h3><p>Entra ID, Active Directory, Entra Connect, Okta, Conditional Access, MFA and passkeys, PIM, joiner-mover-leaver automation, RBAC, access reviews</p></div>
+          <div><h3>Security operations</h3><p>Incident response, log analysis with KQL, Log Analytics, Azure Monitor alerts, Identity Protection risk detections, Windows event logs</p></div>
+          <div><h3>PKI and federation</h3><p>AD CS, certificate templates, certificate-based authentication, SAML 2.0, OpenID Connect, OAuth 2.0 with PKCE, AD FS migration</p></div>
+          <div><h3>Network and cloud security</h3><p>Microsoft Azure, network security groups, DNS, Wireshark, VyOS, GNS3, AWS fundamentals</p></div>
+          <div><h3>Automation</h3><p>Python, PowerShell, Microsoft Graph, REST APIs, SSH automation with Paramiko</p></div>
+          <div><h3>Principles I build on</h3><p>Zero Trust, least privilege, separation of duties, admin tiering, ITIL 4 service management</p></div>
         </div>
       </div>
     </div>
@@ -335,8 +386,8 @@
 
   <section class="contact" id="contact">
     <div class="wrap">
-      <h2>Hiring for identity and access work? Let's talk.</h2>
-      <p class="section-intro">I'm looking for IAM analyst and engineer roles, including federal and defense work.</p>
+      <h2>Hiring for cybersecurity or identity work? Let's talk.</h2>
+      <p class="section-intro">I'm looking for cybersecurity roles, especially in identity and access management, including federal and defense work.</p>
       <div class="actions">
         <a class="btn btn-primary" href="mailto:joshuaagble@gmail.com">joshuaagble@gmail.com</a>
         <a class="btn btn-quiet" href="https://linkedin.com/in/joshagble/">LinkedIn</a>
