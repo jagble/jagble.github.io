@@ -61,12 +61,27 @@
   .btn-quiet:hover { background: #E3EAE8; color: var(--card); }
 
   /* ---------- the credential ---------- */
-  .credential {
+  .badge {
     position: relative;
-    aspect-ratio: 1.586;
     width: 100%;
     max-width: 440px;
     justify-self: end;
+    perspective: 1400px;
+    transform: rotate(-2.5deg);
+    animation: issue 900ms cubic-bezier(.2,.8,.2,1) both 150ms;
+  }
+  .credential {
+    position: relative; display: block; width: 100%; aspect-ratio: 1.586;
+    transform-style: preserve-3d; cursor: pointer; border-radius: 18px;
+    transform: rotateX(var(--rx, 0deg)) rotateY(calc(var(--ry, 0deg) + var(--flip, 0deg)));
+    transition: transform 650ms cubic-bezier(.2,.8,.2,1);
+  }
+  .credential.tilting { transition: transform 120ms ease-out; }
+  .credential.flipped { --flip: 180deg; }
+  .credential:focus-visible { outline: 3px solid var(--focus); outline-offset: 6px; }
+  .face {
+    position: absolute; inset: 0;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
     border-radius: 18px;
     color: #EAF0EE;
     background-color: var(--card);
@@ -79,9 +94,14 @@
     grid-template-columns: 150px 1fr;
     grid-template-rows: auto 1fr auto;
     column-gap: 20px;
-    transform: rotate(-2.5deg);
-    animation: issue 900ms cubic-bezier(.2,.8,.2,1) both 150ms;
   }
+  .face.back { transform: rotateY(180deg); display: flex; flex-direction: column; }
+  .back-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .back-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; font-size: 14px; font-weight: 700; line-height: 1.3; }
+  .back-list li { display: flex; gap: 7px; align-items: baseline; }
+  .back-list li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: #6FD19C; transform: translateY(-1px); }
+  .back-foot { margin-top: auto; font-size: 12px; opacity: 0.8; }
+  .badge-hint { margin: 18px 0 0; font-size: 14px; color: var(--steel); text-align: right; transform: rotate(2.5deg); }
   @keyframes issue {
     from { opacity: 0; transform: translateY(28px) rotate(4deg); }
     to   { opacity: 1; transform: translateY(0) rotate(-2.5deg); }
@@ -120,13 +140,13 @@
   /* problems: a log of real decisions */
   .cases { list-style: none; margin: 0; padding: 0; }
   .case {
-    display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) auto;
+    display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) 150px;
     gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--rule); align-items: baseline;
   }
   .case h3 { font-size: 18px; line-height: 1.35; margin: 0; font-weight: 700; }
   .case p { margin: 0; color: var(--steel); }
   .case p strong { color: var(--ink); font-weight: 500; }
-  .case a { font-weight: 700; white-space: nowrap; font-size: 15px; }
+  .case a { font-weight: 700; white-space: nowrap; font-size: 15px; justify-self: end; }
 
   /* projects */
   .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
@@ -167,16 +187,20 @@
   @media (max-width: 880px) {
     .hero { padding: 40px 0 48px; }
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .credential { justify-self: start; max-width: 400px; transform: rotate(-1.5deg); }
+    .badge { justify-self: start; max-width: 400px; transform: rotate(-1.5deg); }
+    .badge-hint { text-align: left; transform: rotate(1.5deg); }
     @keyframes issue { from { opacity: 0; transform: translateY(20px) rotate(3deg); } to { opacity: 1; transform: rotate(-1.5deg); } }
     .case { grid-template-columns: 1fr; gap: 6px; }
+    .case a { justify-self: start; }
     .projects { grid-template-columns: 1fr; gap: 0; }
     .certs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .skills-grid { grid-template-columns: 1fr; gap: 22px; }
   }
   @media (max-width: 420px) {
     body { font-size: 16px; }
-    .credential { padding: 16px 18px; grid-template-columns: 96px 1fr; column-gap: 14px; border-radius: 14px; }
+    .face { padding: 16px 18px; grid-template-columns: 96px 1fr; column-gap: 14px; border-radius: 14px; }
+    .credential { border-radius: 14px; }
+    .back-list { font-size: 12px; gap: 4px 12px; }
     .portrait { width: 96px; height: 128px; font-size: 24px; }
     .field b { font-size: 13px; } .field b.big { font-size: 16px; }
     .field span { font-size: 10px; }
@@ -186,16 +210,66 @@
     .cred-foot { font-size: 10.5px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .credential { animation: none; }
+    html { scroll-behavior: auto; }
+    .badge { animation: none; }
+    .credential, .credential.tilting { transition: none; }
   }
+
+  /* ---------- sticky navigation ---------- */
+  html { scroll-behavior: smooth; }
+  section, .hero { scroll-margin-top: 64px; }
+  .topnav {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(243,245,244,0.88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent; transition: border-color 200ms;
+  }
+  .topnav.scrolled { border-bottom-color: var(--rule); }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 60px; }
+  .nav-name { font-weight: 800; color: var(--ink); text-decoration: none; white-space: nowrap; }
+  .nav-links { display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { color: var(--steel); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; padding: 6px 0; border-bottom: 2px solid transparent; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--card); }
+  @media (max-width: 560px) {
+    .nav-inner { gap: 16px; }
+    .nav-links { gap: 16px; }
+    .nav-links a { font-size: 14px; }
+  }
+
+  /* ---------- problem filters ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  .filters button {
+    font: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
+    padding: 7px 14px; border-radius: 999px; border: 1px solid #C3CFCC; background: transparent; color: var(--ink);
+  }
+  .filters button:hover { border-color: var(--card); }
+  .filters button[aria-pressed="true"] { background: var(--card); border-color: var(--card); color: var(--paper); }
+  .filters button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .filter-count { color: var(--steel); font-size: 14px; margin: 0 0 4px; min-height: 1.4em; }
+  .case.leaving { opacity: 0; transform: translateY(-4px); }
+  .case { transition: opacity 180ms ease, transform 180ms ease; }
+  .case[hidden] { display: none; }
 </style>
 </head>
 <body>
 
-<header class="hero">
+<nav class="topnav" aria-label="Sections">
+  <div class="wrap nav-inner">
+    <a class="nav-name" href="#top">Josh Agble</a>
+    <div class="nav-links">
+      <a href="#projects">Projects</a>
+      <a href="#problems">Problems</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <p class="name">Josh Agble</p>
       <h1>I build secure systems, break them on purpose, and fix what I find.</h1>
       <p class="lede">Cybersecurity engineer with a focus on <strong>identity and access management</strong>. I work across Entra ID, Active Directory and Okta, and on incident response, log analysis, PKI and security automation in Python and PowerShell. Every claim on this page links to the evidence.</p>
       <div class="actions">
@@ -205,7 +279,10 @@
       </div>
     </div>
 
-    <div class="credential" role="img" aria-label="A stylized identity badge with a photo of Josh Agble: cybersecurity engineer, access level least privilege, sign-in method certificate.">
+    <div class="badge">
+      <div class="credential" role="button" tabindex="0" aria-pressed="false"
+           aria-label="Identity badge for Josh Agble, cybersecurity engineer. Press to flip it and see verified certifications.">
+        <div class="face front">
       <div class="cred-top">
         <span class="cred-org">Identity credential</span>
         <span class="chip" aria-hidden="true"></span>
@@ -220,6 +297,25 @@
         <span>Sign-in method: certificate</span>
         <span class="ok">Valid</span>
       </div>
+        </div>
+        <div class="face back" aria-hidden="true">
+          <div class="back-top">
+            <span class="cred-org">Verified credentials</span>
+            <span class="chip"></span>
+          </div>
+          <ul class="back-list">
+            <li>CompTIA Security+</li>
+            <li>CompTIA Cloud+</li>
+            <li>CompTIA Network+</li>
+            <li>CompTIA A+</li>
+            <li>AWS Cloud Practitioner</li>
+            <li>LPI Linux Essentials</li>
+            <li>ITIL 4 Foundation</li>
+          </ul>
+          <span class="back-foot">Verify at credly.com/users/jagble</span>
+        </div>
+      </div>
+      <p class="badge-hint">Tap the badge to flip it</p>
     </div>
   </div>
 </header>
@@ -263,58 +359,67 @@
     <div class="wrap">
       <h2>Problems I've worked through</h2>
       <p class="section-intro">Security problems organizations actually face, what I did about each one, and where to see the work.</p>
+      <div class="filters" role="group" aria-label="Filter problems by area">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="lifecycle" aria-pressed="false">Identity lifecycle</button>
+        <button type="button" data-filter="privileged" aria-pressed="false">Privileged access</button>
+        <button type="button" data-filter="federation" aria-pressed="false">Federation and PKI</button>
+        <button type="button" data-filter="incident" aria-pressed="false">Incident response</button>
+        <button type="button" data-filter="automation" aria-pressed="false">Automation</button>
+      </div>
+      <p class="filter-count" aria-live="polite"></p>
       <ul class="cases">
-        <li class="case">
+        <li class="case" data-tags="lifecycle">
           <h3>A fired employee can still get in</h3>
           <p>Measured how long a terminated user kept cloud access: their old password still worked at 79 seconds. Made offboarding revoke sessions and force a sync, <strong>cutting the cloud disable lag from about 29 minutes to about 3</strong>.</p>
           <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.5-lifecycle-automation/README.md#5-leaver-and-the-exposure-window">See the test</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="lifecycle automation">
           <h3>300 new hires start on the same day</h3>
           <p>Created 306 accounts in one run from an HR file, each with the right role groups, <strong>checked against an answer key written beforehand</strong>.</p>
           <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.5-lifecycle-automation/README.md#9-scale-test-340-people">See the test</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="privileged">
           <h3>A Domain Admin hidden in a nested group</h3>
           <p>Built a review that follows group nesting. It found the path I planted, <strong>plus two problems I didn't plant</strong>.</p>
           <a href="https://github.com/jagble/hybrid-iam-jml-lab/blob/HEAD/parts/1.6-security-review/README.md">See the review</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="privileged">
           <h3>Admins hold Global Admin around the clock</h3>
           <p>Removed standing admin access, including my own. Global Admin now needs MFA, a reason and a second person's approval, and <strong>expires after one hour</strong>.</p>
           <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.3-privileged-identity-management/README.md">See the setup</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="incident">
           <h3>An employee's account is compromised</h3>
           <p>Rebuilt the timeline from the logs, confirmed one account was affected, and <strong>contained it in 11 minutes</strong>. Found that passing MFA marked the risk as resolved, and added an alert for it.</p>
           <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.6-incident-response/README.md">See the response</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="incident automation">
           <h3>Devices are quietly hijacked by a rogue DNS server</h3>
           <p>Wrote Python that found every device pointed at the rogue server, opened help desk tickets through an API and fixed each device over SSH. Then a monitor that <strong>checks 16 devices every 30 seconds and repairs tampering on its own</strong>.</p>
           <a href="https://github.com/jagble/dns-incident-response-automation">See the project</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="privileged">
           <h3>A forgotten app can read the whole directory</h3>
           <p>Inventoried every app and its credentials, found an owner-less app with Tier 0 rights, deleted the risky one, and <strong>moved reporting to a managed identity with no stored secret</strong>.</p>
           <a href="https://github.com/jagble/zero-trust-iam-lab/blob/HEAD/parts/2.8-non-human-identities/README.md">See the inventory</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="federation">
           <h3>Moving an app to a new identity provider could lock everyone out</h3>
           <p>Found that AD usernames use a non-routable suffix, so every cloud username differs. Connected ServiceNow by employee ID instead, so <strong>nobody's identity changed in the migration</strong>.</p>
           <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.4-saml-adfs/README.md#1-choosing-the-identifier">See the design</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="federation">
           <h3>A retired federation server could still forge sign-ins</h3>
           <p>Migrated ServiceNow off AD FS to Entra ID, then decommissioned AD FS end to end, including <strong>its signing-key container in AD and its revoked certificate</strong>.</p>
           <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.5-migrate-to-entra/README.md#7-decommissioning-ad-fs">See the decommission</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="federation">
           <h3>An app can't keep a secret, and sign-in codes get stolen</h3>
           <p>Built an OIDC app with no client secret, using PKCE. Proved a stolen code is useless without the verifier, works only once, and <strong>is never issued to an unassigned user</strong>.</p>
           <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.6-oidc-oauth/README.md#7-attacks-that-should-fail">See the tests</a>
         </li>
-        <li class="case">
+        <li class="case" data-tags="federation incident">
           <h3>A stolen smart card should stop working right away</h3>
           <p>Built certificate-only sign-in with certificates from my own CA, the lab version of CAC/PIV. Then revoked a certificate and showed <strong>Entra still accepted it 40 minutes later</strong>, and documented what has to go with revocation.</p>
           <a href="https://github.com/jagble/federated-sso-pki-lab/blob/HEAD/parts/3.8-cba-and-review/README.md#6-revocation">See the test</a>
@@ -406,5 +511,74 @@
   </div>
 </footer>
 
+
+<script>
+(() => {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Badge: tilt toward the pointer, flip on click/tap or Enter/Space
+  const badge = document.querySelector('.badge');
+  const card = document.querySelector('.credential');
+  const back = card.querySelector('.back');
+  const front = card.querySelector('.front');
+  const flip = () => {
+    const on = card.classList.toggle('flipped');
+    card.setAttribute('aria-pressed', on);
+    back.setAttribute('aria-hidden', !on);
+    front.setAttribute('aria-hidden', on);
+  };
+  card.addEventListener('click', flip);
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
+  if (!reduce && window.matchMedia('(pointer: fine)').matches) {
+    badge.addEventListener('pointermove', e => {
+      const r = badge.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      card.classList.add('tilting');
+      card.style.setProperty('--ry', (x * 14).toFixed(2) + 'deg');
+      card.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg');
+    });
+    badge.addEventListener('pointerleave', () => {
+      card.classList.remove('tilting');
+      card.style.setProperty('--ry', '0deg'); card.style.setProperty('--rx', '0deg');
+    });
+  }
+
+  // Sticky nav: border once scrolled, highlight the section in view
+  const nav = document.querySelector('.topnav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+  const links = [...document.querySelectorAll('.nav-links a')];
+  const byId = Object.fromEntries(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        links.forEach(a => a.removeAttribute('aria-current'));
+        const a = byId[en.target.id]; if (a) a.setAttribute('aria-current', 'true');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('main section[id]').forEach(sec => io.observe(sec));
+
+  // Problems: filter by area
+  const buttons = [...document.querySelectorAll('.filters button')];
+  const cases = [...document.querySelectorAll('.case')];
+  const count = document.querySelector('.filter-count');
+  const apply = f => {
+    let shown = 0;
+    cases.forEach(c => {
+      const match = f === 'all' || c.dataset.tags.split(' ').includes(f);
+      if (match) {
+        shown++;
+        if (c.hidden) { c.hidden = false; c.classList.add('leaving'); requestAnimationFrame(() => requestAnimationFrame(() => c.classList.remove('leaving'))); }
+      } else { c.hidden = true; }
+    });
+    count.textContent = f === 'all' ? '' : `Showing ${shown} of ${cases.length}`;
+  };
+  buttons.forEach(b => b.addEventListener('click', () => {
+    buttons.forEach(x => x.setAttribute('aria-pressed', x === b));
+    apply(b.dataset.filter);
+  }));
+})();
+</script>
 </body>
 </html>
