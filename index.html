@@ -40,13 +40,20 @@
   .hero { padding: 72px 0 64px; }
   .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 56px; align-items: center; }
   .name { font-size: 15px; font-weight: 700; color: var(--steel); margin: 0 0 18px; letter-spacing: 0.01em; }
-  h1 {
-    font-size: clamp(34px, 4.6vw, 54px);
-    line-height: 1.08;
+  .hero-name {
+    font-size: clamp(52px, 7.4vw, 88px);
+    line-height: 0.98;
     font-weight: 800;
-    letter-spacing: -0.02em;
-    margin: 0 0 22px;
-    max-width: 14ch;
+    letter-spacing: -0.035em;
+    margin: 0 0 20px;
+  }
+  .tagline {
+    font-size: clamp(22px, 2.5vw, 30px);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    max-width: 30ch;
   }
   .lede { font-size: 19px; color: var(--steel); max-width: 52ch; margin: 0 0 30px; }
   .lede strong { color: var(--ink); font-weight: 500; }
@@ -158,19 +165,48 @@
   .tag { display: inline-block; font-size: 13px; font-weight: 700; color: var(--card); background: #E1EAE8; border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
   .more { margin: 24px 0 0; }
 
-  /* certifications: badge wall */
-  .certs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 24px; }
-  .cert { display: grid; justify-items: start; align-content: start; gap: 4px; }
+  /* certifications: badge wall with flip cards */
+  .cert-hint { margin: -16px 0 24px; color: var(--steel); font-size: 15px; }
+  .certs { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+  .cert { perspective: 1000px; }
+  .cert-inner { position: relative; min-height: 228px; transform-style: preserve-3d; transition: transform 600ms cubic-bezier(.2,.8,.2,1); }
+  .cert.flipped .cert-inner { transform: rotateY(180deg); }
+  .cert-front, .cert-back {
+    position: absolute; inset: 0; border-radius: 14px;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  }
+  .cert-front {
+    display: grid; justify-items: start; align-content: start; gap: 4px; text-align: left;
+    font: inherit; color: inherit; background: transparent; border: 1px solid transparent; padding: 14px; cursor: pointer;
+    transition: background-color 200ms, border-color 200ms;
+  }
+  .cert-front:hover { background: #E9EFED; border-color: var(--rule); }
+  .cert-front:focus-visible, .cert-close:focus-visible, .cert-verify:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   .cert-img {
     position: relative; width: 96px; height: 96px; margin-bottom: 10px;
     display: grid; place-items: center; border-radius: 12px;
     background: #E3EAE8; color: var(--card); font-weight: 800; font-size: 14px; text-align: center; line-height: 1.2;
+    transition: transform 300ms cubic-bezier(.2,.8,.2,1);
   }
+  .cert-front:hover .cert-img, .cert-front:focus-visible .cert-img { transform: translateY(-4px) rotate(-4deg) scale(1.04); }
   .cert-img::before { content: attr(data-fallback); padding: 6px; }
   .cert-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--paper); border-radius: 12px; }
   .cert-name { font-weight: 700; line-height: 1.3; }
   .cert-issuer { color: var(--steel); font-size: 15px; line-height: 1.35; }
   .cert-pending .cert-img { background: transparent; border: 2px dashed #B9C6C3; color: var(--steel); font-weight: 700; font-size: 13px; }
+  .cert-back {
+    transform: rotateY(180deg); background: var(--card); color: #EAF0EE; padding: 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .cert-back-name { font-weight: 800; line-height: 1.25; }
+  .cert-back p { margin: 0; font-size: 14px; line-height: 1.45; color: #CFDAD7; }
+  .cert-verify { color: #F3D58A; font-weight: 700; font-size: 14px; margin-top: auto; }
+  .cert-verify:hover { color: #FFFFFF; }
+  .cert-close {
+    align-self: flex-start; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    color: #EAF0EE; background: transparent; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 3px 12px;
+  }
+  .cert-pending .cert-close { margin-top: auto; }
 
   /* skills */
   .skills-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 40px; }
@@ -193,7 +229,10 @@
     .case { grid-template-columns: 1fr; gap: 6px; }
     .case a { justify-self: start; }
     .projects { grid-template-columns: 1fr; gap: 0; }
-    .certs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .certs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .cert-inner { min-height: 250px; }
+    .cert-front, .cert-back { padding: 12px; }
+    .cert-back p { font-size: 13px; }
     .skills-grid { grid-template-columns: 1fr; gap: 22px; }
   }
   @media (max-width: 420px) {
@@ -212,7 +251,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .badge { animation: none; }
-    .credential, .credential.tilting { transition: none; }
+    .credential, .credential.tilting, .cert-inner, .cert-img { transition: none; }
   }
 
   /* ---------- sticky navigation ---------- */
@@ -225,7 +264,7 @@
   }
   .topnav.scrolled { border-bottom-color: var(--rule); }
   .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 60px; }
-  .nav-name { font-weight: 800; color: var(--ink); text-decoration: none; white-space: nowrap; }
+  .nav-name { font-weight: 800; font-size: 19px; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; white-space: nowrap; }
   .nav-links { display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; }
   .nav-links::-webkit-scrollbar { display: none; }
   .nav-links a { color: var(--steel); text-decoration: none; font-size: 15px; font-weight: 500; white-space: nowrap; padding: 6px 0; border-bottom: 2px solid transparent; }
@@ -270,7 +309,8 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <h1>I build secure systems, break them on purpose, and fix what I find.</h1>
+      <h1 class="hero-name">Josh Agble</h1>
+      <p class="tagline">I build secure systems, break them on purpose, and fix what I find.</p>
       <p class="lede">Cybersecurity engineer with a focus on <strong>identity and access management</strong>. I work across Entra ID, Active Directory and Okta, and on incident response, log analysis, PKI and security automation in Python and PowerShell. Every claim on this page links to the evidence.</p>
       <div class="actions">
         <a class="btn btn-primary" href="mailto:joshuaagble@gmail.com">Email me</a>
@@ -432,46 +472,126 @@
     <div class="wrap">
       <h2>Certifications</h2>
       <p class="section-intro">B.S. Information Technology, Western Governors University, 2026. You can verify my certifications on <a href="https://www.credly.com/users/jagble">my Credly profile</a>.</p>
+      <p class="cert-hint">Select a badge to see what it covers.</p>
       <ul class="certs">
           <li class="cert">
-            <span class="cert-img" data-fallback="Security+"><img src="https://images.credly.com/size/340x340/images/80d8a06a-c384-42bf-ad36-db81bce5adce/blob" alt="CompTIA Security+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">CompTIA Security+</span>
-            <span class="cert-issuer">CompTIA</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="CompTIA Security+, CompTIA. Show what it covers.">
+                <span class="cert-img" data-fallback="Security+"><img src="https://images.credly.com/size/340x340/images/80d8a06a-c384-42bf-ad36-db81bce5adce/blob" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">CompTIA Security+</span>
+                <span class="cert-issuer">CompTIA</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">CompTIA Security+</span>
+                <p>Core security: threats and attacks, access control, cryptography, incident response and risk management.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="Cloud+"><img src="https://images.credly.com/size/340x340/images/b2e3c623-cc4a-4f0c-8a3b-aa6231e138fe/blob" alt="CompTIA Cloud+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">CompTIA Cloud+</span>
-            <span class="cert-issuer">CompTIA</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="CompTIA Cloud+, CompTIA. Show what it covers.">
+                <span class="cert-img" data-fallback="Cloud+"><img src="https://images.credly.com/size/340x340/images/b2e3c623-cc4a-4f0c-8a3b-aa6231e138fe/blob" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">CompTIA Cloud+</span>
+                <span class="cert-issuer">CompTIA</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">CompTIA Cloud+</span>
+                <p>Deploying, securing, maintaining and troubleshooting cloud infrastructure across providers.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="Network+"><img src="https://images.credly.com/size/340x340/images/c70ba73e-3c8a-46fa-9d60-4a9af94ad662/blob" alt="CompTIA Network+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">CompTIA Network+</span>
-            <span class="cert-issuer">CompTIA</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="CompTIA Network+, CompTIA. Show what it covers.">
+                <span class="cert-img" data-fallback="Network+"><img src="https://images.credly.com/size/340x340/images/c70ba73e-3c8a-46fa-9d60-4a9af94ad662/blob" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">CompTIA Network+</span>
+                <span class="cert-issuer">CompTIA</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">CompTIA Network+</span>
+                <p>Designing, securing and troubleshooting networks: TCP/IP, routing, switching and wireless.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="A+"><img src="https://images.credly.com/size/340x340/images/f6d62c5d-1e1d-4de6-92ee-8dc8c80b1c7b/blob" alt="CompTIA A+ badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">CompTIA A+</span>
-            <span class="cert-issuer">CompTIA</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="CompTIA A+, CompTIA. Show what it covers.">
+                <span class="cert-img" data-fallback="A+"><img src="https://images.credly.com/size/340x340/images/f6d62c5d-1e1d-4de6-92ee-8dc8c80b1c7b/blob" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">CompTIA A+</span>
+                <span class="cert-issuer">CompTIA</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">CompTIA A+</span>
+                <p>Hardware, operating systems, troubleshooting and security fundamentals.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="AWS CCP"><img src="https://images.credly.com/size/340x340/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png" alt="AWS Certified Cloud Practitioner badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">AWS Certified Cloud Practitioner</span>
-            <span class="cert-issuer">Amazon Web Services</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="AWS Certified Cloud Practitioner, Amazon Web Services. Show what it covers.">
+                <span class="cert-img" data-fallback="AWS CCP"><img src="https://images.credly.com/size/340x340/images/00634f82-b07f-4bbd-a6bb-53de397fc3a6/image.png" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">AWS Certified Cloud Practitioner</span>
+                <span class="cert-issuer">Amazon Web Services</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">AWS Certified Cloud Practitioner</span>
+                <p>AWS cloud concepts, the shared responsibility model for security, core services and billing.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="LPI"><img src="https://s3.amazonaws.com/jigyaasa_content_static/LPI-Linux-Essentials_000YCy.webp" alt="Linux Essentials badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">Linux Essentials</span>
-            <span class="cert-issuer">Linux Professional Institute</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="Linux Essentials, Linux Professional Institute. Show what it covers.">
+                <span class="cert-img" data-fallback="LPI"><img src="https://s3.amazonaws.com/jigyaasa_content_static/LPI-Linux-Essentials_000YCy.webp" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">Linux Essentials</span>
+                <span class="cert-issuer">Linux Professional Institute</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">Linux Essentials</span>
+                <p>The Linux command line, files and permissions, users and groups, and open-source basics.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert">
-            <span class="cert-img" data-fallback="ITIL 4"><img src="https://images.credly.com/images/8b943c4b-c186-4e9f-84aa-004322b76eed/linkedin_thumb_image.png" alt="ITIL 4 Foundation badge" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
-            <span class="cert-name">ITIL 4 Foundation</span>
-            <span class="cert-issuer">PeopleCert</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="ITIL 4 Foundation, PeopleCert. Show what it covers.">
+                <span class="cert-img" data-fallback="ITIL 4"><img src="https://images.credly.com/images/8b943c4b-c186-4e9f-84aa-004322b76eed/linkedin_thumb_image.png" alt="" width="96" height="96" loading="lazy" onerror="this.remove()"></span>
+                <span class="cert-name">ITIL 4 Foundation</span>
+                <span class="cert-issuer">PeopleCert</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">ITIL 4 Foundation</span>
+                <p>IT service management: incident, problem and change practices, and the service value system.</p>
+                <a class="cert-verify" href="https://www.credly.com/users/jagble" tabindex="-1">Verify on Credly</a>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
           <li class="cert cert-pending">
-            <span class="cert-img" data-fallback="In progress"></span>
-            <span class="cert-name">Microsoft SC-300</span>
-            <span class="cert-issuer">Identity and Access Administrator, in progress</span>
+            <div class="cert-inner">
+              <button type="button" class="cert-front" aria-expanded="false" aria-label="Microsoft SC-300, Identity and Access Administrator, in progress. Show what it covers.">
+                <span class="cert-img" data-fallback="In progress"></span>
+                <span class="cert-name">Microsoft SC-300</span>
+                <span class="cert-issuer">Identity and Access Administrator, in progress</span>
+              </button>
+              <div class="cert-back" aria-hidden="true">
+                <span class="cert-back-name">Microsoft SC-300</span>
+                <p>Entra ID identity management, authentication, access management and identity governance. Studying for it now.</p>
+                <button type="button" class="cert-close" tabindex="-1">Back</button>
+              </div>
+            </div>
           </li>
       </ul>
     </div>
@@ -558,6 +678,23 @@
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main section[id]').forEach(sec => io.observe(sec));
+
+  // Certifications: flip a badge to see what it covers
+  document.querySelectorAll('.cert').forEach(cert => {
+    const front = cert.querySelector('.cert-front'), back = cert.querySelector('.cert-back');
+    const backFocusables = back.querySelectorAll('a, button');
+    const set = on => {
+      cert.classList.toggle('flipped', on);
+      front.setAttribute('aria-expanded', on);
+      front.tabIndex = on ? -1 : 0;
+      back.setAttribute('aria-hidden', !on);
+      backFocusables.forEach(el => el.tabIndex = on ? 0 : -1);
+      (on ? back.querySelector('.cert-close') : front).focus({ preventScroll: true });
+    };
+    front.addEventListener('click', () => set(true));
+    cert.querySelector('.cert-close').addEventListener('click', () => set(false));
+    back.addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
+  });
 
   // Problems: filter by area
   const buttons = [...document.querySelectorAll('.filters button')];
