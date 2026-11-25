@@ -141,7 +141,7 @@
 
   /* ---------- sections ---------- */
   section { padding: 56px 0; border-top: 1px solid var(--rule); }
-  h2 { font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.015em; margin: 0 0 8px; }
+  h2 { font-size: 36px; line-height: 1.15; font-weight: 800; letter-spacing: -0.015em; margin: 0 0 8px; }
   .section-intro { color: var(--steel); max-width: 62ch; margin: 0 0 32px; }
 
   /* problems: a log of real decisions */
@@ -157,11 +157,12 @@
 
   /* projects */
   .projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
-  .project { padding: 22px 0; border-bottom: 1px solid var(--rule); }
-  .project h3 { font-size: 20px; margin: 0 0 6px; font-weight: 700; line-height: 1.3; }
+  .project { padding: 26px 0; border-bottom: 1px solid var(--rule); }
+  .project h3 { font-size: 26px; margin: 0 0 8px; font-weight: 800; line-height: 1.2; letter-spacing: -0.015em; }
   .project h3 a { color: var(--ink); text-decoration: none; }
-  .project h3 a:hover { text-decoration: underline; }
-  .project p { margin: 0; color: var(--steel); }
+  .project h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  .project p { margin: 0; color: var(--steel); font-size: 15px; line-height: 1.55; max-width: 48ch; }
+  .project .tag { vertical-align: 5px; }
   .tag { display: inline-block; font-size: 13px; font-weight: 700; color: var(--card); background: #E1EAE8; border-radius: 4px; padding: 1px 8px; margin-left: 8px; vertical-align: 2px; }
   .more { margin: 24px 0 0; }
 
@@ -229,6 +230,8 @@
     .case { grid-template-columns: 1fr; gap: 6px; }
     .case a { justify-self: start; }
     .projects { grid-template-columns: 1fr; gap: 0; }
+    .project h3 { font-size: 23px; }
+    h2 { font-size: 31px; }
     .certs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
     .cert-inner { min-height: 250px; }
     .cert-front, .cert-back { padding: 12px; }
